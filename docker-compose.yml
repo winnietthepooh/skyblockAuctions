@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+
+  cassandra1:
+    image: cassandra:3.11.14
+    environment:
+      - CASSANDRA_CLUSTERNAME=docker_compose_cluster
+      - CASSANDRA_DC=data_center_1
+      - CASSANDRA_RACK=rack_1
+      - CASSANDRA_SEEDS=cassandra1
+    ports:
+      - "7001:7000"
+      - "7011:7199"
+    networks:
+      - database_network
+  cassandra2:
+    image: cassandra:3.11.14
+    environment:
+      - CASSANDRA_CLUSTERNAME=docker_compose_cluster
+      - CASSANDRA_DC=data_center_2
+      - CASSANDRA_RACK=rack_2
+      - CASSANDRA_SEEDS=cassandra1
+    ports:
+      - "7002:7000"
+      - "7012:7199"
+    networks:
+      - database_network
+
+networks:
+  database_network:
+    driver:
+      bridge
